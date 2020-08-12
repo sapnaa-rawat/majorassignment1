@@ -9,7 +9,7 @@ function generatePassword() {
 }
 var pass=generatePassword();
 
-//Sending an email to the Instructor
+//Sending an email
 function mailer(req,res,next){
 const output = `
 <p> You have a new course request</p>
@@ -30,8 +30,8 @@ service: "gmail",
 port: 587,
 secure: false, // true for 465, false for other ports
 auth: {
-user: "testjahrin@gmail.com", // generated ethereal user
-pass: "jahrin@123" // generated ethereal password
+user: "ankitprasad073@gmail.com", 
+pass: "ankit123#" 
 },
 tls: {
 rejectUnauthorized: false
@@ -40,11 +40,11 @@ rejectUnauthorized: false
 
 // setup email data with unicode symbols
 let mailOptions = {
-from: '"BRIGHTNERD 👻" <testjahrin@gmail.com>', // sender address
-to: email, // // list of receivers
-subject: "New Course Allocation Request✔", // Subject line
-text: "Hello world?", // plain text body
-html: output // html body
+from: '"Ankit" <ankitprasad073@gmail.com>', 
+to: email, 
+subject: "You are allocated to a new course", 
+text: "Hello",
+html: output 
 };
 
 transporter.sendMail(mailOptions, (error, info) => {
