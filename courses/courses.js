@@ -11,12 +11,11 @@ let schemaCourse = new Schema({
   instructorName: [
     {
       type: String,
-      ref: "teacher"
+      
     }
   ],
-  startDate: {
-    type: Date
-  },
+  
+  email:{type: String},
   duration: {
     type: String
   }
