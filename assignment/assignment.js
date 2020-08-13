@@ -1,5 +1,5 @@
 const student=require('../teacher/userSchema')
-const course=require('../courses/courses')
+const course=require('../courses/schema')
 const nodemailer=require('nodemailer')
 const multer = require('multer');
 //Sending an email

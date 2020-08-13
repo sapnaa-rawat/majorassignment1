@@ -1,4 +1,4 @@
-const courseModel = require("./courses");
+const courseModel = require("./schema");
 const mailer=require('../assignment/assignment')
 const nodemailer=require('nodemailer')
 var mailToUser=(req,res)=>{

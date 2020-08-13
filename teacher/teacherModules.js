@@ -1,12 +1,21 @@
-const teacher = require("./userSchema");
+const teacher = require("../courses/schema");
 const mongoose = require("mongoose");
+var jwt = require("jsonwebtoken");
 
-const jwt = require("jsonwebtoken");
-const keys = require("../key/key.json");
-const JWT_KEY = keys.JWT_KEY;
+function authToken(req, res, next) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
 
+    var decode = jwt.verify(token, "shhhhh");
+    console.log(decode._doc);
+    next();
+  } catch (err) {
+    res.status(401).send("invalid token");
+  }
+}
 //------------------------------- VIEW ALL -------------
-async function showTeacher(req, res)  {
+async function showTeacher(req, res) {
   teacher.find((err, data) => {
     if (err) {
       console.log(err);
@@ -17,16 +26,16 @@ async function showTeacher(req, res)  {
 }
 
 //-------------------------------------- ADD----------------------------------
-async function addTeacher(req,res) {
-
-  await teacher.find({
-    teacherID: req.body.teacherID
-  })
+async function addTeacher(req, res) {
+  await teacher
+    .find({
+      teacherID: req.body.teacherID,
+    })
     .exec()
-    .then(data => {
+    .then((data) => {
       if (data.length >= 1) {
         res.status(409).json({
-          message: "Teacher already exists"
+          message: "Teacher already exists",
         });
       } else {
         const teachermodel = new teacher({
@@ -35,89 +44,116 @@ async function addTeacher(req,res) {
           name: req.body.name,
           email: req.body.email,
           password: req.body.password,
-          userType: "teacher"
+          userType: "teacher",
         });
 
-        teachermodel
-          .save()
-    }
-});  
+        teachermodel.save();
+      }
+    });
 }
 //-----------------------------LOGIN--------------------
 
-
-async function login(req, res)  {
+async function login(req, res) {
   //console.log(req.body.teacherID)
-  await teacher.find({ teacherID: req.body.teacherID })
+  await teacher
+    .find({ teacherID: req.body.teacherID })
     .exec()
-    .then(data => {
+    .then((data) => {
       console.log(data);
       if (data.length < 1) {
         return res.status(401).json({
-          message: "Authorization Failed!"
+          message: "Authorization Failed!",
         });
       }
       if (data) {
         //correct password
-        const token = jwt.sign(
-          {
-            id: data[0]._id,
-            teacherID: data[0].teacherID,
-            userType: data[0].userType
-          },
-          JWT_KEY,
-          {
-            expiresIn: "1h"
-          }
-        );
-        console.log(data);
-        return res.status(200).json({
-          message: "Authorization Success",
-          token: token
+
+        var token = jwt.sign({ ...data, _id: data._id.toString() }, "shhhhh", {
+          expiresIn: "1h",
         });
+        return res
+          .status(200)
+          .json({ message: "logged in sucessfully", token: token });
       }
       res.status(401).json({
-        message: "Authorization Failed!"
+        message: "Authorization Failed!",
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 }
 
 //--------------------------------- UPDATE-------------------------------
-async function updateTeacher(req, res)  {
-  await teacher.findById(req.params.id, (err, data) => {
-    if (!data) {
-      res.status(404).send("data is not found");
-    } else {
+async function updateTeacher(req, res) {
+  await teacher
+    .findById(req.params.id)
+    .exec()
+    .then((data) => {
+      console.log(data);
+      if (data.length < 1) {
+        return res.status(401).json({
+          message: "Authorization Failed!",
+        });
+      }
+      if (data) {
+        //correct password
+
+        var token = jwt.sign({ ...data, _id: data._id.toString() }, "shhhhh", {
+          expiresIn: "1h",
+        });
+        return res
+          .status(200)
+          .json({ message: "logged in sucessfully", token: token });
+      }
       (data.teacherID = req.body.teacherID), (data.name = req.body.name);
       data.mail = req.body.email;
       data.password = req.body.password;
 
       data
         .save()
-        .then(data => {
+        .then((data) => {
           res.json("teacher updated");
         })
-        .catch(err => {
+        .catch((err) => {
           res.status(400).send("update not succesful");
         });
-    }
-  });
+    });
 }
 
 async function deleteTeacher(req, res) {
-  teacher.findOneAndDelete({ _id: req.params.id }, (err, data) => {
-    if (err) {
-      res.json(err);
-    } else {
+  teacher
+    .findOneAndDelete({ _id: req.params.id })
+    .exec()
+    .then((data) => {
+      console.log(data);
+      if (data.length < 1) {
+        return res.status(401).json({
+          message: "Authorization Failed!",
+        });
+      }
+      if (data) {
+        //correct password
+
+        var token = jwt.sign({ ...data, _id: data._id.toString() }, "shhhhh", {
+          expiresIn: "1h",
+        });
+        return res
+          .status(200)
+          .json({ message: "logged in sucessfully", token: token });
+      }
       res.json("deleted successfully");
-    }
-  });
+    });
 }
 
-module.exports = {addTeacher,login,updateTeacher,deleteTeacher,showTeacher};
+module.exports = {
+  addTeacher,
+  login,
+  updateTeacher,
+  deleteTeacher,
+  showTeacher,
+  authToken,
+};

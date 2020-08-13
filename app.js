@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true,useUnifiedTopology: true});
 
 //var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/teacher');
 //var teacherRouter=require('./teacher/teacherRoutes')
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'html')));
 
 //app.use('/', indexRouter);
-app.use('/', usersRouter);
+app.use('/teacher', usersRouter);
 app.use(helmet());
 app.use(cors());
 
