@@ -1,16 +1,10 @@
 const teacher = require("./userSchema");
 const mongoose = require("mongoose");
 
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const keys = require("../key/key.json");
 const JWT_KEY = keys.JWT_KEY;
 
-function passCheck(userpassword, dbpassword) {
-  var comparepass = bcrypt.compare(userpassword, dbpassword);
-  return comparepass;
-}
 //------------------------------- VIEW ALL -------------
 async function showTeacher(req, res)  {
   teacher.find((err, data) => {
@@ -95,7 +89,7 @@ async function login(req, res)  {
 }
 
 //--------------------------------- UPDATE-------------------------------
-function updateTeacher(req, res)  {
+async function updateTeacher(req, res)  {
   await teacher.findById(req.params.id, (err, data) => {
     if (!data) {
       res.status(404).send("data is not found");
