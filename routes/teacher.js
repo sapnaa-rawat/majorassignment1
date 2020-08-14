@@ -3,7 +3,6 @@ var router = express.Router();
 var teacher=require('../teacher/teacherModules')
 var course=require('../courses/courseModules')
 var assign=require('../assignment/assignment')
-var auth=require('../teacher/teacherModules')
 function validate(req, res, next) {
   var email = req.body.email;
   var password = req.body.password;
@@ -13,12 +12,11 @@ function validate(req, res, next) {
   next();
 }
 
-router.get('/registration', teacher.showTeacher);
-router.get('/login',validate, teacher.showTeacher);
-router.post('/add', teacher.addTeacher);
-router.post('/upload',auth.authToken, assign.uploadFile);
-router.put('/update', auth.authToken,teacher.updateTeacher);
-router.delete('/delete',auth.authToken, teacher.deleteTeacher);
+router.post('/registration', teacher.addTeacher);
+router.get('/login',validate, teacher.login);
+router.post('/upload',teacher.authToken, assign.uploadFile);
+router.put('/update', teacher.authToken,teacher.updateTeacher);
+router.delete('/delete',teacher.authToken, teacher.deleteTeacher);
 router.get('/courses', course.showCourse);
 router.put('/courses/update', course.updateCourse);
 router.post('/courses/add', course.addCourse);

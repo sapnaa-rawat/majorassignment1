@@ -56,7 +56,7 @@ async function addTeacher(req, res) {
 async function login(req, res) {
   //console.log(req.body.teacherID)
   await teacher
-    .find({ teacherID: req.body.teacherID })
+    .find({ email: req.body.email,password:req.body.password })
     .exec()
     .then((data) => {
       console.log(data);
@@ -68,7 +68,7 @@ async function login(req, res) {
       if (data) {
         //correct password
 
-        var token = jwt.sign({ ...data, _id: data._id.toString() }, "shhhhh", {
+        var token = jwt.sign({ ...data, _id: data._id }, "shhhhh", {
           expiresIn: "1h",
         });
         return res

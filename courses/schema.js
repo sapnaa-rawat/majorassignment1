@@ -38,4 +38,5 @@ let userSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("course", userSchema);
+let teacherModel = mongoose.model("teacher", userSchema);
+module.exports = teacherModel;
