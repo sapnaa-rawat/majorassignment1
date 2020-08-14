@@ -1,10 +1,9 @@
-const student=require('../teacher/userSchema')
 const course=require('../courses/schema')
 const nodemailer=require('nodemailer')
 const multer = require('multer');
 //Sending an email
 function mailer(req, res, next) {
-    if(course.email===student.email){
+    if(course.email===course.email){
       const output = `
     <p> You have a new assignment</p>
     <h3> Course Details </h3>
@@ -12,7 +11,7 @@ function mailer(req, res, next) {
     <p> If email and name is not yours please kindly inform to administrator, Thankyou </p>
     `;
     
-      const email = student.email;
+      const email = course.email;
     
       let transporter = nodemailer.createTransport({
         service: "gmail",
